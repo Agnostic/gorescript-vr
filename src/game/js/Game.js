@@ -404,6 +404,27 @@ GS.Game.prototype = GS.inherit(GS.Base, {
 		});
 	},
 
+	handleFatalError: function(message) {
+		var that = this;
+
+		document.body.innerHTML = "<span style='color: #fff; font-size: 32px'> Fatal error: '" + message + "'</span><br/>";
+		document.body.style.padding = "20px";
+
+		var a = document.createElement("a");
+		a.innerHTML = "click here to exit";
+		a.style.fontSize = "32px";
+		a.style.color = "#fff";
+		a.style.cursor = "pointer";
+		a.style.textDecoration = "underline";
+		a.onclick = function() {
+			that.exit();
+		};
+
+		document.body.appendChild(a);
+
+		this.nextState = GS.GameStates.Dispose;
+	},
+
 	updateFov: function() {
 		this.cameraFov = GS.Settings.fov;
 		this.camera.fov = GS.Settings.fov;

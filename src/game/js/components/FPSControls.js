@@ -27,7 +27,7 @@ GS.FPSControls = function(camera) {
 	this.enabled = true;
 	this.fly = false;
 	this.ySmoothing = false;
-	this.ySmoothingFactor = 0.1;	
+	this.ySmoothingFactor = 0.1;
 };
 
 GS.FPSControls.prototype = {
@@ -37,7 +37,8 @@ GS.FPSControls.prototype = {
 		var that = this;
 		var pointerLock = "pointerLockElement" in document;
 		if (!pointerLock) {
-			throw "Pointer Lock API not supported";
+			GAME.handleFatalError("Pointer Lock API not supported");
+			return;
 		}
 
 		this.canvas = $("#game-canvas")[0];
@@ -144,7 +145,7 @@ GS.FPSControls.prototype = {
 		this.look.addVectors(this.camera.position, this.forwardLookVector);
 		this.camera.lookAt(this.look);
 	},
-	
+
 	setViewAngles: function() {
 		var right = new THREE.Vector3();
 		var forward = new THREE.Vector3();
