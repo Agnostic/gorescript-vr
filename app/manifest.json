@@ -15,6 +15,7 @@
     }
   },
   "permissions": [
+    "fileSystem",
     "storage",
     "pointerLock",
     "app.window.fullscreen",

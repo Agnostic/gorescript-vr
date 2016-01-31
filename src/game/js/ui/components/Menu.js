@@ -63,6 +63,9 @@ GS.UIComponents.Menu.prototype = {
 		this.btnLevelSelect = this.topPanel.addButton("level select");
 		this.btnLevelSelect.onClick = function() { that.activePanel = that.levelSelectPanel; };
 
+		this.btnCustomMap = this.topPanel.addButton("custom map");
+		this.btnCustomMap.onClick = function() { GAME.customMap(); };
+
 		this.btnOptions = this.topPanel.addButton("options");
 		this.btnOptions.onClick = function() { that.activePanel = that.optionsPanel; };
 

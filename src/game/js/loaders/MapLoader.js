@@ -11,8 +11,8 @@ GS.MapLoader.prototype = {
 		var that = this;
 		var path = this.mapPath + filename;
 
-		$.ajax({ 
-			url: path, 
+		$.ajax({
+			url: path,
 			dataType: "text",
 			success: function(jsonStr) {
 				callback(jsonStr);
@@ -38,7 +38,7 @@ GS.MapLoader.prototype = {
 
 		map.bounds = this.getMapBounds(map);
 
-		return map;		
+		return map;
 	},
 
 	getMapBounds: function(map) {

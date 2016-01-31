@@ -374,6 +374,36 @@ GS.Game.prototype = GS.inherit(GS.Base, {
 		}
 	},
 
+	customMap: function() {
+		var that = this;
+
+		var options = {
+			accepts: [
+				{
+					extensions: ["js", "json"]
+				}
+			]
+		};
+
+		chrome.fileSystem.chooseEntry(options, function(fileEntry) {
+			if (chrome.runtime.lastError) {
+				return;
+			}
+
+			fileEntry.file(function(file) {
+				var reader = new FileReader();
+
+				reader.onloadend = function(e) {
+					that.assetLoader.assets[GS.AssetTypes.Map].customMap = e.target.result;
+
+					that.loadLevel("customMap");
+				};
+
+				reader.readAsText(file);
+			});
+		});
+	},
+
 	updateFov: function() {
 		this.cameraFov = GS.Settings.fov;
 		this.camera.fov = GS.Settings.fov;
