@@ -35,6 +35,7 @@ GS.Game.prototype = GS.inherit(GS.Base, {
 		this.cameraFar = 1500;
 
 		this.noMenu = false;
+		this.firstTimeInMenu = true;
 
 		this.showFPS = GS.Settings.showFPS;
 		this.showPerformanceDebugMeters = false;
@@ -212,6 +213,11 @@ GS.Game.prototype = GS.inherit(GS.Base, {
 			}
 		} else {
 			this.graphicsManager.monochromeEnabled = false;
+		}
+
+		if (this.firstTimeInMenu) {
+			this.uiManager.removeNewsBox();
+			this.firstTimeInMenu = false;
 		}
 
 		this.uiManager.menuActive = false;

@@ -46,6 +46,7 @@ GS.UIComponents.Menu.prototype = {
 		this.initCheatsPanel();
 		this.initLevelSelectPanel();
 		this.initFooter();
+		this.initNewsBox();
 
 		this.activePanel = this.topPanel;
 	},
@@ -410,6 +411,37 @@ GS.UIComponents.Menu.prototype = {
 		this.children.push(this.label3);
 	},
 
+	initNewsBox: function() {
+		var div = document.createElement("div");
+
+		div.style.position = "absolute";
+		div.style.boxSizing = "border-box";
+		div.style.left = "20px";
+		div.style.bottom = "20px";
+		div.style.width = "320px";
+		div.style.height = "200px";
+		div.style.padding = "15px";
+		div.style.opacity = 0.75;
+		div.style.borderRadius = "5px";
+		div.style.zIndex = 10000;
+		div.style.backgroundColor = "black";
+
+		var a = document.createElement("a");
+		a.href = "http://gorescript.com";
+		a.target = "_blank";
+		a.style.color = "white";
+		a.style.fontSize = "16px";
+		a.style.fontFamily = "Arial, Helvetica, sans-serif";
+		a.style.textDecoration = "none";
+		a.innerText = a.textContent = "link";
+
+		div.appendChild(a);
+
+		document.body.appendChild(div);
+
+		this.newsBox = div;
+	},
+
 	switchToIngame: function() {
 		this.ingame = true;
 		this.btnCheats.disabled = false;
@@ -438,4 +470,9 @@ GS.UIComponents.Menu.prototype = {
 			this.children[i].draw();
 		}
 	},
+
+	removeNewsBox: function() {
+		$(this.newsBox).remove();
+		this.newsBox = undefined;
+	}
 };
