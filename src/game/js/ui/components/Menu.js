@@ -420,20 +420,22 @@ GS.UIComponents.Menu.prototype = {
 		div.style.bottom = "20px";
 		div.style.width = "320px";
 		div.style.height = "200px";
-		div.style.padding = "15px";
+		div.style.padding = "0";
 		div.style.opacity = 0.75;
 		div.style.borderRadius = "5px";
 		div.style.zIndex = 10000;
 		div.style.backgroundColor = "black";
+		div.style.textAlign = "center";
+		div.style.overflow = "hidden";
 
 		var a = document.createElement("a");
 		a.href = "http://gorescript.com";
 		a.target = "_blank";
 		a.style.color = "white";
-		a.style.fontSize = "16px";
+		a.style.fontSize = "19px";
 		a.style.fontFamily = "Arial, Helvetica, sans-serif";
 		a.style.textDecoration = "none";
-		a.innerText = a.textContent = "link";
+		a.innerHTML = "<img src='news.png' />";
 
 		div.appendChild(a);
 
