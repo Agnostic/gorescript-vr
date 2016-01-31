@@ -5,9 +5,10 @@ app/gorescript-deps.min.js
 app/gorescript.min.js
 app/index.html
 
-build/
+dist/
+report/
 node_modules/
 src/game/assets/
-src/server/iisnode/
-src/server/assets.zip
 .DS_Store
+*.sublime-project
+*.sublime-workspace

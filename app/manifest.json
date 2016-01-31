@@ -2,7 +2,7 @@
   "name": "gorescript",
   "short_name": "gorescript",
   "description": "Fast-paced '90s-style first-person shooter with an abstract 2.5D-meets-voxels aesthetic, made entirely in JavaScript / WebGL.",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "manifest_version": 2,
   "app": {
     "background": {
@@ -20,7 +20,8 @@
     "app.window.fullscreen",
     "app.window.fullscreen.overrideEsc"
   ],
-  "icons": { 
+  "offline_enabled": true,
+  "icons": {
     "128": "icon128.png"
   }
 }
