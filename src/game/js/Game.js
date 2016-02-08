@@ -1,4 +1,4 @@
-GS.GameVersion = "v1.1.6";
+GS.GameVersion = "v1.2.0";
 GS.ReleaseDate = "february 2016";
 
 GS.GameStates = {

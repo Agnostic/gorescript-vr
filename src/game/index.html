@@ -21,7 +21,8 @@
 		body { margin: 0; padding: 0; overflow: hidden; background-color: #000; }
 		canvas { position: fixed; }
 
-		.news-box { position: absolute; box-sizing: border-box; right: 1vw; top: 1vh; padding: 0; z-index: 10000; }
+		.news-box { position: absolute; box-sizing: border-box; right: 1vw; top: 1vh; padding: 0; z-index: 10000;
+					text-align: right; display: none; }
 		.news-box a { color: #fff; font-size: 4vw; font-family: "hudFont"; text-decoration: none; }
 		.news-box a:hover { text-decoration: underline; }
 
@@ -33,6 +34,10 @@
 
 </head>
 <body>
+
+	<div class="news-box">
+		<a href="http://gorescript.com/blog" target="_blank">NEWS!</a>
+	</div>
 
 	<script src="gorescript-deps.min.js"></script>
 	<script src="gorescript.min.js"></script>
