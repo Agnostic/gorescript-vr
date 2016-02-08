@@ -1,4 +1,5 @@
 GS.GameVersion = "v1.1.6";
+GS.ReleaseDate = "february 2016";
 
 GS.GameStates = {
 	Dispose: 0,
@@ -407,17 +408,14 @@ GS.Game.prototype = GS.inherit(GS.Base, {
 	handleFatalError: function(message) {
 		var that = this;
 
-		document.body.innerHTML = "<span style='color: #fff; font-size: 32px'> Fatal error: '" + message + "'</span><br/>";
+		document.body.innerHTML = "<span class='fatal-error'> fatal error: '" + message + "'</span><br/>";
 		document.body.style.padding = "20px";
 
 		var a = document.createElement("a");
-		a.innerHTML = "click here to exit";
-		a.style.fontSize = "32px";
-		a.style.color = "#fff";
-		a.style.cursor = "pointer";
-		a.style.textDecoration = "underline";
+		a.innerHTML = "click here to restart";
+		a.className = "fatal-error-link";
 		a.onclick = function() {
-			that.exit();
+			chrome.runtime.reload();
 		};
 
 		document.body.appendChild(a);
