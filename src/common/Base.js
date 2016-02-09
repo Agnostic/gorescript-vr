@@ -16,13 +16,13 @@ GS.inherit = function(classObj, members) {
 			base.__defineSetter__(prop, desc.set);
 		}
 	});
-	
+
 	return base;
 };
-	
+
 GS.pushArray = function(dst, src) {
 	src.forEach(function(x) {
-		this.push(x); 
+		this.push(x);
 	}, dst);
 };
 
@@ -58,7 +58,7 @@ GS.Base = function() {
 	this.clearColor = 0x000000;
 	this.antialias = true;
 
-	this.cameraFov = 90;
+	this.cameraFov = 75;
 	this.cameraNear = 0.1;
 	this.cameraFar = 1000;
 	this.timeStep = 0.01666;
@@ -88,8 +88,11 @@ GS.Base.prototype = {
 		this.renderer.setClearColor(this.clearColor, 1);
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.renderer.domElement.id = "game-canvas";
-	
+
 		this.camera = new THREE.PerspectiveCamera(this.cameraFov, window.innerWidth / window.innerHeight, this.cameraNear, this.cameraFar);
+
+		// Apply VR headset positional data to camera
+		this.controls = new THREE.VRControls(this.camera);
 
 		this.scene = new THREE.Scene();
 
@@ -115,8 +118,8 @@ GS.Base.prototype = {
 	update: function() {
 	},
 
-	draw: function() {
-		this.renderer.render(this.scene, this.camera);
+	draw: function(currentTime) {
+		// this.renderer.render(this.scene, this.camera);
 	},
 
 	// http://gafferongames.com/game-physics/fix-your-timestep/
@@ -153,6 +156,9 @@ GS.Base.prototype = {
 		}
 
 		this.requestAnimationFrameId = requestAnimationFrame(function() { that.gameLoop(); });
+
+		// Update VR headset position and apply to camera.
+  	this.controls.update();
 	},
 
 	onResize: function() {

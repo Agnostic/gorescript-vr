@@ -16,7 +16,7 @@ GS.GraphicsManager.prototype = {
 		this.fxaaEnabled = GS.Settings.fxaa;
 		this.ssaoEnabled = GS.Settings.ssao;
 		this.noiseEnabled = GS.Settings.noise;
-		this.vignetteEnabled = GS.Settings.vignette;		
+		this.vignetteEnabled = GS.Settings.vignette;
 		this.halfSizeEnabled = GS.Settings.halfSize;
 
 		this.monochromeEnabled = false;
@@ -35,129 +35,93 @@ GS.GraphicsManager.prototype = {
 	},
 
 	initEffectComposer: function() {
-		this.composer = new THREE.EffectComposer(this.renderer);
-
-		var depthShader = THREE.ShaderLib["depthRGBA"];
-		var depthUniforms = THREE.UniformsUtils.clone(depthShader.uniforms);
-
-		this.depthMaterial = new THREE.ShaderMaterial({ 
-			fragmentShader: depthShader.fragmentShader, 
-			vertexShader: depthShader.vertexShader, 
-			uniforms: depthUniforms 
-		});
-		this.depthMaterial.blending = THREE.NoBlending;
-
-		this.depthTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, { 
-			minFilter: THREE.NearestFilter, 
-			magFilter: THREE.NearestFilter, 
-			format: THREE.RGBAFormat 
+		// Apply VR stereo rendering to renderer.
+		var VREffect = new THREE.VREffect(this.renderer);
+		this.composer = new WebVRManager(this.renderer, VREffect, {
+		  hideButton: false
 		});
 
-		this.effectSSAO = new THREE.ShaderPass(THREE.SSAOShader);
-		this.effectSSAO.uniforms["tDepth"].value = this.depthTarget;
-		this.effectSSAO.uniforms["size"].value.set(window.innerWidth, window.innerHeight);
-		this.effectSSAO.uniforms["cameraNear"].value = this.camera.near;
-		this.effectSSAO.uniforms["cameraFar"].value = this.camera.far;
+		// this.composer = new THREE.EffectComposer(this.renderer);
 
-		this.effectFilter = new THREE.ShaderPass(GS.BrightnessFilterShader);
-		this.effectBloom = new THREE.BloomPass(1, 25, 4, 512);
-		this.effectBloom.needsSwap = true;
+		// var depthShader = THREE.ShaderLib["depthRGBA"];
+		// var depthUniforms = THREE.UniformsUtils.clone(depthShader.uniforms);
 
-		this.effectGlow = new THREE.ShaderPass(GS.GlowShader);
-		this.effectGlow.uniforms["tGlow"].value = this.effectBloom.renderTargetY;
-		this.effectGlow.uniforms["intensity"].value = 1;
+		// this.depthMaterial = new THREE.ShaderMaterial({
+		// 	fragmentShader: depthShader.fragmentShader,
+		// 	vertexShader: depthShader.vertexShader,
+		// 	uniforms: depthUniforms
+		// });
+		// this.depthMaterial.blending = THREE.NoBlending;
+
+		this.depthTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
+			minFilter: THREE.NearestFilter,
+			magFilter: THREE.NearestFilter,
+			format: THREE.RGBAFormat
+		});
+
+		// this.effectSSAO = new THREE.ShaderPass(THREE.SSAOShader);
+		// this.effectSSAO.uniforms["tDepth"].value = this.depthTarget;
+		// this.effectSSAO.uniforms["size"].value.set(window.innerWidth, window.innerHeight);
+		// this.effectSSAO.uniforms["cameraNear"].value = this.camera.near;
+		// this.effectSSAO.uniforms["cameraFar"].value = this.camera.far;
+
+		// this.effectFilter = new THREE.ShaderPass(GS.BrightnessFilterShader);
+		// this.effectBloom = new THREE.BloomPass(1, 25, 4, 512);
+		// this.effectBloom.needsSwap = true;
+
+		// this.effectGlow = new THREE.ShaderPass(GS.GlowShader);
+		// this.effectGlow.uniforms["tGlow"].value = this.effectBloom.renderTargetY;
+		// this.effectGlow.uniforms["intensity"].value = 1;
 
 		this.effectColor = new THREE.ShaderPass(GS.ColorShader);
 		this.effectColor.uniforms["color"].value = new THREE.Color(0x000000);
 
-		this.effectFXAA = new THREE.ShaderPass(THREE.FXAAShader);
-		this.effectFXAA.uniforms["resolution"].value.set(1 / window.innerWidth, 1 / window.innerHeight);
+		// this.effectFXAA = new THREE.ShaderPass(THREE.FXAAShader);
+		// this.effectFXAA.uniforms["resolution"].value.set(1 / window.innerWidth, 1 / window.innerHeight);
 
-		this.effectVignette = new THREE.ShaderPass(THREE.VignetteShader);
-		this.effectNoise = new THREE.ShaderPass(GS.NoiseShader);
-		this.effectNoise.uniforms["tNoise"].value = this.getNoiseTexture(this.noiseTextureSize);
-		this.effectNoise.uniforms["ratio"].value.set(window.innerWidth / this.noiseTextureSize, window.innerHeight / this.noiseTextureSize);
+		// this.effectVignette = new THREE.ShaderPass(THREE.VignetteShader);
+		// this.effectNoise = new THREE.ShaderPass(GS.NoiseShader);
+		// this.effectNoise.uniforms["tNoise"].value = this.getNoiseTexture(this.noiseTextureSize);
+		// this.effectNoise.uniforms["ratio"].value.set(window.innerWidth / this.noiseTextureSize, window.innerHeight / this.noiseTextureSize);
 
-		this.effectMonochrome = new THREE.ShaderPass(THREE.LuminosityShader);
+		// this.effectMonochrome = new THREE.ShaderPass(THREE.LuminosityShader);
 
-		var effectCopy = new THREE.ShaderPass(THREE.CopyShader);
-		effectCopy.renderToScreen = true;
+		// var effectCopy = new THREE.ShaderPass(THREE.CopyShader);
+		// effectCopy.renderToScreen = true;
 
-		this.composer.addPass(this.effectFilter);
-		this.composer.addPass(this.effectBloom);
-		this.composer.addPass(this.effectNoise);
-		this.composer.addPass(this.effectGlow);
-		this.composer.addPass(this.effectSSAO);
-		this.composer.addPass(this.effectColor);
-		this.composer.addPass(this.effectFXAA);
-		this.composer.addPass(this.effectVignette);		
-		this.composer.addPass(this.effectMonochrome);
-		this.composer.addPass(effectCopy);
-	},
-
-	renderToScreen: function() {
-		this.renderer.autoClear = false;
-
-		this.renderer.clear(true, true, false);
-
-		this.renderer.render(this.grid.skybox.scene, this.grid.skybox.camera);
-		this.renderer.render(this.scene, this.camera);
-
-		this.renderer.clear(false, true, false);
-
-		var playerView = this.grid.player.playerView;
-		this.renderer.render(playerView.scene, playerView.camera);
+		// this.composer.addPass(this.effectFilter);
+		// this.composer.addPass(this.effectBloom);
+		// this.composer.addPass(this.effectNoise);
+		// this.composer.addPass(this.effectGlow);
+		// this.composer.addPass(this.effectSSAO);
+		// this.composer.addPass(this.effectColor);
+		// this.composer.addPass(this.effectFXAA);
+		// this.composer.addPass(this.effectVignette);
+		// this.composer.addPass(this.effectMonochrome);
+		// this.composer.addPass(effectCopy);
 	},
 
 	render: function() {
-		var renderTarget = this.composer.renderTarget2;
-		this.renderer.autoClear = false;
+		// this.renderer.autoClear = false;
+		// this.renderer.clearTarget(renderTarget, true, true, false);
 
-		this.renderer.clearTarget(renderTarget, true, true, false);
+		// this.composer.render(this.grid.skybox.scene, this.grid.skybox.camera);
+		this.composer.render(this.scene, this.camera);
+		// this.renderer.render(this.grid.skybox.scene, this.grid.skybox.camera, renderTarget);
+		// this.renderer.render(this.scene, this.camera, renderTarget);
 
-		this.renderer.render(this.grid.skybox.scene, this.grid.skybox.camera, renderTarget);
-		this.renderer.render(this.scene, this.camera, renderTarget);
-
-		this.renderer.clearTarget(renderTarget, false, true, false);
-
-		if (this.showWeapon) {
-			var playerView = this.grid.player.playerView;
-			this.renderer.render(playerView.scene, playerView.camera, renderTarget);
-		}
-	},
-
-	renderDepthTarget: function() {
-		var renderTarget = this.depthTarget;
-		this.renderer.autoClear = false;
-
-		this.renderer.clearTarget(renderTarget, true, true, false);
-
-		this.scene.overrideMaterial = this.depthMaterial;
-		this.renderer.render(this.scene, this.camera, renderTarget);
-		this.scene.overrideMaterial = null;
-
-		this.renderer.clearTarget(renderTarget, false, true, false);
+		// this.renderer.clearTarget(renderTarget, false, true, false);
 
 		if (this.showWeapon) {
 			var playerView = this.grid.player.playerView;
-			playerView.scene.overrideMaterial = this.depthMaterial;
-			this.renderer.render(playerView.scene, playerView.camera, renderTarget);
-			playerView.scene.overrideMaterial = null;
+			// this.renderer.render(playerView.scene, playerView.camera, renderTarget);
+			// this.composer.render(playerView.scene, playerView.camera);
 		}
+
 	},
 
 	draw: function() {
-		if (this.noPostProcessing) {
-			this.renderToScreen();
-		} else {			
-			this.render();
-
-			if (this.ssaoEnabled) {
-				this.renderDepthTarget();
-			}
-
-			this.composer.render();
-		}
+		this.render();
 	},
 
 	onResize: function() {
@@ -169,16 +133,16 @@ GS.GraphicsManager.prototype = {
 			height *= 0.5;
 		}
 
-		var depthTarget = this.depthTarget.clone();
-		depthTarget.width = width;
-		depthTarget.height = height;
-		this.depthTarget = depthTarget;
-		this.effectSSAO.uniforms["tDepth"].value = this.depthTarget;
+		// var depthTarget = this.depthTarget.clone();
+		// depthTarget.width = width;
+		// depthTarget.height = height;
+		// this.depthTarget = depthTarget;
+		// this.effectSSAO.uniforms["tDepth"].value = this.depthTarget;
 
-		this.effectSSAO.uniforms["size"].value.set(width, height);
-		this.effectFXAA.uniforms["resolution"].value.set(1 / width, 1 / height);
-		this.effectNoise.uniforms["ratio"].value.set(width / this.noiseTextureSize, height / this.noiseTextureSize);
-		this.composer.setSize(width, height);
+		// this.effectSSAO.uniforms["size"].value.set(width, height);
+		// this.effectFXAA.uniforms["resolution"].value.set(1 / width, 1 / height);
+		// this.effectNoise.uniforms["ratio"].value.set(width / this.noiseTextureSize, height / this.noiseTextureSize);
+		// this.composer.setSize(width, height);
 
 		$(this.renderer.domElement).css("width", window.innerWidth + "px").css("height", window.innerHeight + "px");
 	},
@@ -279,7 +243,7 @@ GS.GraphicsManager.prototype = {
 		return this.effectNoise.enabled;
 	},
 
-	set halfSizeEnabled(value) {		
+	set halfSizeEnabled(value) {
 		this._halfSizeEnabled = value;
 		this.onResize();
 	},

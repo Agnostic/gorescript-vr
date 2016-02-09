@@ -12,6 +12,9 @@ gulp.task("js-vendor", function () {
 			"./src/deps/three.min.js",
 			"./src/deps/OBJExporter.js",
 			"./src/deps/OBJLoader.js",
+			"./src/deps/VRControls.js",
+			"./src/deps/VREffect.js",
+			"./src/deps/webvr-polyfill.js",
 
 			"./src/deps/post-processing/*.js",
 		])
@@ -22,6 +25,7 @@ gulp.task("js-vendor", function () {
 				"/*! gorescript / http://gorescript.com */",
 				"/*! three.js / threejs.org/license */",
 				"/*! tween.js - http://github.com/sole/tween.js */",
+				"/*! Adapted for VR by Gilberto Avalos - http://github.com/Agnostic */",
 			].join("\n")))
 
 		.pipe(uglify({

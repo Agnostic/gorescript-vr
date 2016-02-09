@@ -27,7 +27,7 @@ GS.FPSControls = function(camera) {
 	this.enabled = true;
 	this.fly = false;
 	this.ySmoothing = false;
-	this.ySmoothingFactor = 0.1;	
+	this.ySmoothingFactor = 0.1;
 };
 
 GS.FPSControls.prototype = {
@@ -60,19 +60,19 @@ GS.FPSControls.prototype = {
 		this.debugCanvas = $("#debug-ui-canvas")[0];
 
 		var rightMouseDown = false;
-		$(this.debugCanvas).on("mousedown.fpsControls", function(e) { 
-			if (e.which == 3) { 
-				rightMouseDown = true; 
-			} 
+		$(this.debugCanvas).on("mousedown.fpsControls", function(e) {
+			if (e.which == 3) {
+				rightMouseDown = true;
+			}
 		});
-		$(this.debugCanvas).on("mouseup.fpsControls", function(e) { 
-			if (e.which == 3 && rightMouseDown) { 
-				rightMouseDown = false; 
-				that.enable(); 
+		$(this.debugCanvas).on("mouseup.fpsControls", function(e) {
+			if (e.which == 3 && rightMouseDown) {
+				rightMouseDown = false;
+				that.enable();
 			}
 		});
 	},
-	
+
 	detachEvents: function() {
 		$(this.debugCanvas).off("mousedown.fpsControls");
 		$(this.debugCanvas).off("mouseup.fpsControls");
@@ -88,7 +88,7 @@ GS.FPSControls.prototype = {
 
 	enable: function() {
 		if (!this.pointerLockEnabled) {
-			this.canvas.requestPointerLock = this.canvas.requestPointerLock || 
+			this.canvas.requestPointerLock = this.canvas.requestPointerLock ||
 				this.canvas.mozRequestPointerLock || this.canvas.webkitRequestPointerLock;
 			this.canvas.requestPointerLock();
 		}
@@ -97,7 +97,7 @@ GS.FPSControls.prototype = {
 	disable: function() {
 		if (this.pointerLockEnabled) {
 			document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock || document.webkitExitPointerLock;
-			document.exitPointerLock();			
+			document.exitPointerLock();
 		}
 	},
 
@@ -212,7 +212,7 @@ GS.FPSControls.prototype = {
 		this.look.addVectors(this.camera.position, this.forwardLookVector);
 		this.camera.lookAt(this.look);
 	},
-	
+
 	setViewAngles: function() {
 		var right = new THREE.Vector3();
 		var forward = new THREE.Vector3();

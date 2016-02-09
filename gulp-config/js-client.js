@@ -9,6 +9,7 @@ gulp.task("js-client", function () {
 	var list = [
 		"./src/common/Base.js",
 		"./src/common/*.js",
+		"./src/common/WebVRManager.js",
 
 		"./src/game/js/ui/*.js",
 		"./src/game/js/ui/components/*.js",
